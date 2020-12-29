@@ -1,9 +1,10 @@
-static int CELLSIZE=20;
+static int CELLSIZE=20; //<>//
 static int BOARDSIZE=20;
 
 Board board;
 ArrayList<Matrix> masterpieces = new ArrayList<Matrix>();
 ArrayList<Player> players = new ArrayList<Player>(4);
+long exitTime;
 
 void setup() {
   size(1000, 1000);
@@ -21,12 +22,14 @@ void setup() {
     m.printit();
     println();
   }
+  exitTime = millis()+5000;
 }
 
 void draw() {
   board.display();
+  if (millis() > exitTime) { 
     exit();
-
+  }
 }
 
 ArrayList loadPieces() {
@@ -46,7 +49,7 @@ ArrayList loadPieces() {
       }
     } else {
       mrow.clear();
-      for (int i=0; i<row.getColumnCount(); i++) { //<>//
+      for (int i=0; i<row.getColumnCount(); i++) {
         if (row.getString(i) != null) {
           mrow.append(row.getString(i).equals("0") ? 0 : 1);
           //print(row.getString(i));

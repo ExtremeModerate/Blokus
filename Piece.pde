@@ -1,6 +1,6 @@
-public static color[] PIECE_COLORS = {#FF0000, #00FF00, #0000FF, #00FFFF};
-public static int RIGHT = 1;
-public static int LEFT = -1;
+final color[] PIECE_COLORS = {#FF0000, #00FF00, #0000FF, #00FFFF};
+final int RIGHT = 1;
+final int LEFT = -1;
 
 class Piece {
 
@@ -19,10 +19,11 @@ class Piece {
   }
 
   void rotateTo(int position) {
-    if (position >= 0 && position <=3) {
-      while (rotation != position) {
-        rotate(position > rotation ? RIGHT : LEFT);
-      }
+    int pos = constrain(position, 0, 3);
+    //if (position >= 0 && position <=3) {
+    while (rotation != pos) {
+      this.rotate(pos > rotation ? RIGHT : LEFT);
+      //}
     }
   }
 
@@ -47,4 +48,10 @@ class Piece {
   //    }
   //  }
   //}
+}
+
+class PPiece extends Piece {
+  PPiece(Matrix igrid) {
+    super(igrid);
+  }
 }
