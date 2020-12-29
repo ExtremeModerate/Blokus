@@ -1,15 +1,15 @@
 class Board {
 
-  Box [][] grid;
+  BoardCell [][] grid;
   int width, height;
 
   Board(int x, int y) {
     width = x;
     height = y;
-    grid = new Box[x][y];
+    grid = new BoardCell[x][y];
     for (int w=0; w<width; w++) {
       for (int h=0; h<height; h++) {
-        grid[w][h] = new Box(w, h);
+        grid[w][h] = new BoardCell(w, h);
       }
     }
   }
@@ -21,22 +21,34 @@ class Board {
       }
     }
   }
+  
+  boolean isPlayable(Piece piece, int x, int y) {
+    if 
+  }  
+  
 }
 
-class Box {
+class BoardCell {
 
   int x, y;
-  int boxColor;
+  int owner = 0;
+  color myColor;
+  final color[] COLORS = {Piece.RED, Piece.GREEN, Piece.BLUE, Piece.YELLOW};
 
-  Box(int ix, int iy) {
+  BoardCell(int ix, int iy) {
     x=ix;
     y=iy;
-    boxColor = int(random(250));
+    owner = 0; 
+    myColor = COLORS[int(random(COLORS.length))];
   }
 
   void display() {
-    stroke(255);
-    fill(boxColor);
+    stroke(#000000);
+    fill(myColor);
     rect(x*CELLSIZE, y*CELLSIZE, CELLSIZE, CELLSIZE);
+  }
+  
+  boolean isPlayed() {
+    return false;
   }
 }

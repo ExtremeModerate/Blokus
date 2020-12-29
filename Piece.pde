@@ -1,18 +1,19 @@
-final color[] PIECE_COLORS = {#FF0000, #00FF00, #0000FF, #00FFFF};
-final int RIGHT = 1;
-final int LEFT = -1;
 
 class Piece {
-
-  int w, h;
+  public static final int RIGHT = 1;
+  public static final int LEFT = -1;
+  public static final color RED = #FF0000;
+  public static final color GREEN = #00FF00;
+  public static final color BLUE = #0000FF;
+  public static final color YELLOW = #FFFF00;
+  
   int rotation = 0;
   Matrix grid;
 
   Piece(Matrix igrid) {
-    w=igrid.width;
-    h=igrid.height;
     grid = igrid;
   }
+
 
   void display() {
     grid.printit();
@@ -22,7 +23,7 @@ class Piece {
     int pos = constrain(position, 0, 3);
     //if (position >= 0 && position <=3) {
     while (rotation != pos) {
-      this.rotate(pos > rotation ? RIGHT : LEFT);
+      this.rotate(pos > rotation ? Piece.RIGHT : Piece.LEFT);
       //}
     }
   }
@@ -35,23 +36,5 @@ class Piece {
       grid.rotateRight();
       rotation = (rotation<3) ? rotation+1 : 0;
     }
-  }
-
-  //Piece(int iw, int ih, Matrix igrid) {
-  //  w=iw;
-  //  h=ih;
-  //  grid = new int[w][h];
-
-  //  for (int x=0; x<w; x++) {
-  //    for (int y=0; y<h; y++) {
-  //      grid[x][y] = igrid.matrix[x][y];
-  //    }
-  //  }
-  //}
-}
-
-class PPiece extends Piece {
-  PPiece(Matrix igrid) {
-    super(igrid);
   }
 }
