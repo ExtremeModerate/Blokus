@@ -1,5 +1,14 @@
-static int CELLSIZE=20; //<>//
+static int CELLSIZE=30; //<>//
 static int BOARDSIZE=20;
+
+interface GameColors {
+  public static final color EMPTY = #EEEEEE;
+  public static final color RED = #EE0000;
+  public static final color GREEN = #00EE00;
+  public static final color BLUE = #0000EE;
+  public static final color YELLOW = #EEEE00;
+  public static final color[] COLORS = {GameColors.EMPTY, GameColors.RED, GameColors.GREEN, GameColors.BLUE, GameColors.YELLOW};
+}
 
 Board board;
 ArrayList<Matrix> masterpieces = new ArrayList<Matrix>();
@@ -8,26 +17,44 @@ long exitTime;
 
 void setup() {
   size(1000, 1000);
-  board = new Board(BOARDSIZE, BOARDSIZE);
+  board = new Board(BOARDSIZE);
+  //board.randomize(0,4);
   masterpieces = loadPieces();
 
-  for (int i=1; i<2; i++) {
-    players.add(new Player(i, PIECE_COLORS[i-1]));
+  for (int i=1; i<5; i++) {
+    players.add(new Player(i, GameColors.COLORS[i]));
   }
 
-  for (Matrix m : masterpieces) {
-    m.printit();
-    println();
-    m.rotateRight();
-    m.printit();
-    println();
-  }
-  exitTime = millis()+5000;
+  //for (Player player : players) {
+  //  for (int i=0; i<player.pieces.size(); i++) {
+  //    board.placePiece(player.pieces.get(i), int(random(board.width)), int(random(board.height)));
+  //  }
+  //  player.print();
+  //}
+  //Player player = players.get(0);
+  //board.placePiece(player.remaining.get(5), 5,5);
+  //player.remaining.get(5).print();
+
+  //for (Matrix m : masterpieces) {
+  //  m.print();
+  //  println();
+  //  m.rotateRight();
+  //  m.print();
+  //  println();
+  //}
 }
 
 void draw() {
+  long nextPlay=0;
+  
+  if (millis() > nextPlay) {
+    board.placePiece(players.get(int(random(players.size()))).pieces.get(int(random(21))), int(random(board.width)), int(random(board.height)));
+    nextPlay = millis()+10000;
+  }
+  
   board.display();
-  if (millis() > exitTime) { 
+  
+  if (millis() > 50000) { 
     exit();
   }
 }
@@ -40,9 +67,7 @@ ArrayList loadPieces() {
   Table table= loadTable("pieces.csv");
   Matrix matrix = new Matrix(); // start with empty matrix
   for (TableRow row : table.rows()) {
-    //println(row.getColumnCount());
     if (row.getString(0).substring(0, 1).equals("-")) {
-      //println("end piece");
       if (matrix.height > 0) {
         pieces.add(matrix);
         matrix = new Matrix();
@@ -52,14 +77,11 @@ ArrayList loadPieces() {
       for (int i=0; i<row.getColumnCount(); i++) {
         if (row.getString(i) != null) {
           mrow.append(row.getString(i).equals("0") ? 0 : 1);
-          //print(row.getString(i));
-          //print(".");
         }
       }
       if (mrow.size() > 0) {
         matrix.appendRow(mrow.array());
       }
-      //println("");
     }
   }
   if (matrix.height > 0) {
