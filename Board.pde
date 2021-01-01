@@ -1,7 +1,15 @@
 class Board extends Matrix {
 
+  Matrix playerPositions; // = new Matrix(new int[][]{{1,2},{3,4}} );
+  
   Board(int size) {
     super(size, size);
+    
+    IntList players = new IntList(new int[] {1,2,3,4});
+    players.shuffle();
+    int[] p = players.array();
+    playerPositions = new Matrix();
+    //playerPositions.appendRow()
   }
 
   void display() {

@@ -1,5 +1,7 @@
-static int CELLSIZE=30; //<>//
-static int BOARDSIZE=20;
+static final int CELLSIZE=30; //<>//
+static final int BOARDSIZE=20;
+static final int AUTO_EXIT = 50000;
+static final int PLAY_DELAY = 1000;
 
 interface GameColors {
   public static final color EMPTY = #EEEEEE;
@@ -10,19 +12,20 @@ interface GameColors {
   public static final color[] COLORS = {GameColors.EMPTY, GameColors.RED, GameColors.GREEN, GameColors.BLUE, GameColors.YELLOW};
 }
 
-Board board;
+Board board = new Board(BOARDSIZE);
 ArrayList<Matrix> masterpieces = new ArrayList<Matrix>();
 ArrayList<Player> players = new ArrayList<Player>(4);
-long exitTime;
+
+int nextPlay=0;
 
 void setup() {
   size(1000, 1000);
-  board = new Board(BOARDSIZE);
+  
   //board.randomize(0,4);
   masterpieces = loadPieces();
 
-  for (int i=1; i<5; i++) {
-    players.add(new Player(i, GameColors.COLORS[i]));
+  for (int i=0; i<4; i++) {
+    players.add(new Player(i+1, GameColors.COLORS[i]));
   }
 
   //for (Player player : players) {
@@ -45,16 +48,17 @@ void setup() {
 }
 
 void draw() {
-  long nextPlay=0;
-  
-  if (millis() > nextPlay) {
-    board.placePiece(players.get(int(random(players.size()))).pieces.get(int(random(21))), int(random(board.width)), int(random(board.height)));
-    nextPlay = millis()+10000;
-  }
-  
+
   board.display();
-  
-  if (millis() > 50000) { 
+
+  if (millis() > nextPlay) {
+    board.rotate(1);
+    board.placePiece(players.get(int(random(players.size()))).pieces.get(int(random(21))), int(random(board.width)), int(random(board.height)));
+    nextPlay = millis()+1000;
+    println(millis(), nextPlay);
+  }
+
+  if (millis() > AUTO_EXIT) { 
     exit();
   }
 }

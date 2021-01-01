@@ -1,3 +1,4 @@
+import java.awt.Point;
 
 class Piece extends Matrix {
   
@@ -5,6 +6,7 @@ class Piece extends Matrix {
   int owner;
   color pieceColor;
   boolean played;
+  Point location;
   
   Piece(int num, int id, Matrix from) {
     super(from.matrix);
@@ -22,8 +24,22 @@ class Piece extends Matrix {
     pieceColor = newColor;
   }
   
+  void playAt(Point position) {
+    this.setPlayed(true);
+    this.location = position;
+  }
+  
+  void unPlay() {
+    this.setPlayed(false);
+    location.setLocation(-1,-1);
+  }
+  
   void setPlayed(boolean value) {
     this.played = value;
+  }
+  
+  boolean getPlayed() {
+    return this.played;
   }
 
 }

@@ -22,7 +22,18 @@ class Player {
   void playPiece(int number) {
     pieces.get(number).setPlayed(true);
     played.append(number);
-    unplayed.indexOf(number)
+    deleteFromList(unplayed, number);
+  }
+
+  void deleteFromList(IntList list, int value) {
+    while (list.hasValue(value)) {
+      for (int i=0; i<list.size(); i++) {
+        if (list.get(i) == value) {
+          list.remove(i);
+          break;
+        }
+      }
+    }
   }
 
   void print() {
