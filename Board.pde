@@ -1,11 +1,11 @@
 class Board extends Matrix {
 
   Matrix playerPositions; // = new Matrix(new int[][]{{1,2},{3,4}} );
-  
+
   Board(int size) {
     super(size, size);
-    
-    IntList players = new IntList(new int[] {1,2,3,4});
+
+    IntList players = new IntList(new int[] {1, 2, 3, 4});
     players.shuffle();
     int[] p = players.array();
     playerPositions = new Matrix();
@@ -17,16 +17,27 @@ class Board extends Matrix {
       for (int x=0; x<this.width; x++) {
         stroke(#000000);
         fill(GameColors.COLORS[matrix[x][y]]);
-        rect(x*CELLSIZE, y*CELLSIZE, CELLSIZE, CELLSIZE);
+        rect(x*CELLSIZE, y*CELLSIZE, CELLSIZE, CELLSIZE);;
       }
     }
   }
 
-  void placePiece(Piece p, int left, int top) {
-    if (!this.AND(p)) {
+  boolean placePiece(Piece p, int left, int top) {
+    Matrix boardSlice;
+    try {
+      boardSlice = board.subMatrix(left, top, p.width, p.height);
+    } 
+    catch (ArrayIndexOutOfBoundsException e) {
+      return false;
+    }
+
+    if (!boardSlice.AND(p)) {
       println("placing piece", p.owner);
       this.addMatrix(p, left, top);
       p.setPlayed(true);
+      return true;
+    } else {
+      return false;
     }
   }
 

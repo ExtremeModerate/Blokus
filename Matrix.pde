@@ -4,7 +4,9 @@ class Matrix { //<>// //<>//
 
   public int width, height;
   public int[][] matrix;
+  //public Blok[][] blocks;
   public int rotation = 0;
+  public boolean flipped = false;
 
   Matrix(int x, int y) {
     this.width = (x<0 ? 0 : x);
@@ -21,6 +23,20 @@ class Matrix { //<>// //<>//
     for (int y=0; y<this.height; y++) {
       for (int x=0; x<this.width; x++) {
         this.setCell(x, y, grid[x][y]);
+      }
+    }
+  }
+
+  // Initialize with a string that's w*h characters - initializes left to right, top to bottom (0,0)-(w,h)
+  Matrix(int w, int h, String grid) {
+    if (grid.length() != w*h) throw new ArrayIndexOutOfBoundsException("String grid size must match given width and height");
+
+    this.width = w;
+    this.height=h;
+    matrix = new int[this.width][this.height];
+    for (int y=0; y<this.height; y++) {
+      for (int x=0; x<this.width; x++) {
+        matrix[x][y] = (grid.charAt((y*this.width)+x) == '1' ? 1 : 0);
       }
     }
   }
@@ -101,6 +117,27 @@ class Matrix { //<>// //<>//
     this.height = nh;
     matrix = nmatrix;
   }
+
+  void flip() {
+    this.flip(!flipped);
+  }
+
+  void flip(boolean flipTo) {
+    int hold;
+    if (this.flipped == flipTo) return;
+
+    for (int y=0; y<this.height; y++) {
+      for (int x=0; x<floor(this.width/2); x++) {
+        hold = matrix[this.width-x-1][y]; 
+        println("before ", x, y, matrix[x][y], matrix[this.width-x-1][y]);
+        matrix[this.width-x-1][y] = matrix[x][y];
+        matrix[x][y] = hold;
+        println("after ", x, y, matrix[x][y], matrix[this.width-x-1][y]);
+      }
+    }
+    flipped = !flipped;
+  }
+
 
   void setRow(int y, int[] values) {
     if (y>=0 && y<this.height && values.length==this.width) {

@@ -16,11 +16,12 @@ Board board = new Board(BOARDSIZE);
 ArrayList<Matrix> masterpieces = new ArrayList<Matrix>();
 ArrayList<Player> players = new ArrayList<Player>(4);
 
-int nextPlay=0;
+int playTimer=0;
+int currentPlayer = 0;
 
 void setup() {
   size(1000, 1000);
-  
+
   //board.randomize(0,4);
   masterpieces = loadPieces();
 
@@ -51,11 +52,23 @@ void draw() {
 
   board.display();
 
-  if (millis() > nextPlay) {
-    board.rotate(1);
-    board.placePiece(players.get(int(random(players.size()))).pieces.get(int(random(21))), int(random(board.width)), int(random(board.height)));
-    nextPlay = millis()+1000;
-    println(millis(), nextPlay);
+  if (millis() > playTimer) {
+    //board.rotate(1);
+    Piece piece = players.get(currentPlayer).pieces.get(14);
+    if (random(3) == 1) piece.rotate(1);
+    int x=int(random(board.width));
+    int y = int(random(board.height));
+    if (board.placePiece(piece, x, y)) {
+      println("piece " + piece.owner + "," + piece.number + " played at "+x+","+y);
+    } else {
+      piece.rotate(1);
+      if (random(3) == 1) piece.flip();
+      println("NOT PLAYED piece " + piece.owner + "," + piece.number + " played at "+x+","+y);
+    }
+    playTimer = millis()+1000;
+    println(millis(), playTimer);
+    currentPlayer++;
+    if (currentPlayer >= players.size()) currentPlayer = 0;
   }
 
   if (millis() > AUTO_EXIT) { 
