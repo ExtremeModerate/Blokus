@@ -1,8 +1,9 @@
-class Matrix { //<>// //<>//
+class Matrix { //<>// //<>// //<>//
   public static final int RIGHT = 1;
   public static final int LEFT = -1;
 
   public int width, height;
+  public int score=0;
   public int[][] matrix;
   //public Blok[][] blocks;
   public int rotation = 0;
@@ -25,6 +26,7 @@ class Matrix { //<>// //<>//
         this.setCell(x, y, grid[x][y]);
       }
     }
+    setScore();
   }
 
   // Initialize with a string that's w*h characters - initializes left to right, top to bottom (0,0)-(w,h)
@@ -39,11 +41,22 @@ class Matrix { //<>// //<>//
         matrix[x][y] = (grid.charAt((y*this.width)+x) == '1' ? 1 : 0);
       }
     }
+    setScore();
+  }
+
+  void setScore() {
+    score = 0;
+    for (int y=0; y<this.height; y++) { //<>//
+      for (int x=0; x<this.width; x++) {
+        score += (matrix[x][y] == 0 ? 0 : 1);
+      }
+    }
   }
 
   void setCell(int x, int y, int value) {
     if (x>=0 && x<this.width && y>=0 && y<this.height) {
       matrix[x][y] = value;
+      setScore();
     } else {
       throw new ArrayIndexOutOfBoundsException("setCell outside of Matrix");
     }
@@ -57,20 +70,24 @@ class Matrix { //<>// //<>//
     }
   }
 
-  void addMatrix(Matrix m, int left, int top) {
+  void overlayMatrix(Matrix m, int left, int top) {
     for (int y=0; y<m.height; y++) {
       for (int x=0; x<m.width; x++) {
-        if (left+x < this.width && top+y < this.height) {
+        if (left+x < this.width && top+y < this.height && m.getCell(x, y)!=0) {
           this.setCell(left+x, top+y, m.getCell(x, y));
         }
       }
     }
+    setScore();
   }
 
   void replace(Matrix newMatrix) {
     this.width = newMatrix.width;
     this.height = newMatrix.height;
+    setRotation(newMatrix.rotation);
+    flip(newMatrix.flipped);
     this.matrix = newMatrix.matrix;
+    setScore();
   }
 
   // Sets all cells to an absolute value
@@ -86,6 +103,7 @@ class Matrix { //<>// //<>//
         }
       }
     }
+    setScore();
   }
 
   void rotateRight() {
@@ -129,10 +147,10 @@ class Matrix { //<>// //<>//
     for (int y=0; y<this.height; y++) {
       for (int x=0; x<floor(this.width/2); x++) {
         hold = matrix[this.width-x-1][y]; 
-        println("before ", x, y, matrix[x][y], matrix[this.width-x-1][y]);
+        //println("before ", x, y, matrix[x][y], matrix[this.width-x-1][y]);
         matrix[this.width-x-1][y] = matrix[x][y];
         matrix[x][y] = hold;
-        println("after ", x, y, matrix[x][y], matrix[this.width-x-1][y]);
+        //println("after ", x, y, matrix[x][y], matrix[this.width-x-1][y]);
       }
     }
     flipped = !flipped;
@@ -145,6 +163,7 @@ class Matrix { //<>// //<>//
         matrix[x][y] = values[x];
       }
     }
+    setScore();
   }
 
   void randomize(int low, int high) {
@@ -153,6 +172,7 @@ class Matrix { //<>// //<>//
         matrix[x][y] = int(random(low, high+1));
       }
     }
+    setScore();
   }
 
   void appendRow(int[] values) {
@@ -176,6 +196,7 @@ class Matrix { //<>// //<>//
       this.height = nh;
       matrix = nmatrix;
     }
+    setScore();
   }
 
   void rotate(int direction) {
@@ -203,11 +224,11 @@ class Matrix { //<>// //<>//
     if (rotation > 3) rotation = 0;
   }
 
-  void rotateTo(int position) {
-    int pos = constrain(position, 0, 3);
+  void setRotation(int rotation) {
+    rotation = constrain(rotation, 0, 4);
     //if (position >= 0 && position <=3) {
-    while (rotation != pos) {
-      this.rotate(pos > rotation ? Matrix.RIGHT : Matrix.LEFT);
+    while (this.rotation != rotation) {
+      this.rotate(rotation > this.rotation ? Matrix.RIGHT : Matrix.LEFT);
       //}
     }
   }
@@ -236,6 +257,17 @@ class Matrix { //<>// //<>//
     return false;
   }
 
+  boolean equals(Matrix other) {
+    boolean result=true;
+    if (this.height != other.height || this.width != other.width) return false;
+    for (int y=0; y<this.height; y++) {
+      for (int x=0; x<this.width; x++) {
+        result = result &&( this.getCell(x, y) == other.getCell(x, y));
+      }
+    }
+    return result;
+  }
+
   Matrix subMatrix(int left, int top, int w, int h) {
     if (left < 0 || top < 0 || left+w-1 > this.width || top+h-1 > this.height) {
       throw new ArrayIndexOutOfBoundsException("subMatrix outside of original Matrix boundaries");
@@ -248,5 +280,16 @@ class Matrix { //<>// //<>//
       }
     }
     return m;
+  }
+
+  int hashCode() {
+    long hash=0;
+    for (int y=0; y<this.height; y++) {
+      for (int x=0; x<this.width; x++) {
+        hash = hash << 1 | (this.matrix[x][y] == 0 ? 0 : 1);
+      }
+      hash = hash << 1;
+    }
+    return (int) hash;
   }
 }
