@@ -1,4 +1,4 @@
- //<>//
+ //<>// //<>//
 class Player {
   int id;
   int colornum;
@@ -36,7 +36,7 @@ class Player {
 
     for (Piece p : randomPieces) {
       if (!p.played) {
-        println("Piece #", p.number);
+        //println("Piece #", p.number);
         for (Integer k : p.orientations.keySet()) {
           PieceOrientation po = p.orientations.get(k);
           //println(k, po.rotation, po.flipped);

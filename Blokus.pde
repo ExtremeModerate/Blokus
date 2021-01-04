@@ -1,4 +1,4 @@
-//import java.io.PrintStream; //<>//
+//import java.io.PrintStream; //<>// //<>//
 //import java.io.FileOutputStream;
 import java.io.*; 
 import java.util.*; 
@@ -6,7 +6,7 @@ import java.util.*;
 static final int CELLSIZE=30;
 static final int BOARDSIZE=20;
 static final int AUTO_EXIT = 500000;
-static final int PLAY_DELAY = 10000;
+static final int PLAY_DELAY = 3000;
 
 interface GameColors {
   public static final color BACKGROUND = #FFFFFF;
@@ -45,7 +45,6 @@ void setup() {
   //  exit();
   //}
 
-  //board.randomize(0,4);
   masterpieces = loadPieces();
 
   for (int i=0; i<4; i++) {
@@ -66,25 +65,6 @@ void setup() {
     println("-----");
   }
   println("Total ", totalOrientations);
-
-  //exit();
-  //for (Player player : players) {
-  //  for (int i=0; i<player.pieces.size(); i++) {
-  //    board.placePiece(player.pieces.get(i), int(random(board.width)), int(random(board.height)));
-  //  }
-  //  player.print();
-  //}
-  //Player player = players.get(0);
-  //board.placePiece(player.remaining.get(5), 5,5);
-  //player.remaining.get(5).print();
-
-  //for (Matrix m : masterpieces) {
-  //  m.print();
-  //  println();
-  //  m.rotateRight();
-  //  m.print();
-  //  println();
-  //}
 }
 
 void draw() {
@@ -101,39 +81,14 @@ void draw() {
   if (currentPlayer ==0 ) {
     playedPieces = 0;
   }
+  nextPlay = nextPlay || (millis() > playTimer);
+  
   if (! gameOver && nextPlay) {
-    //nextPlay = false;
+    nextPlay = false;
     //board.rotate(1);
     if (players.get(currentPlayer).tryToPlay(board)) {
       playedPieces += 1;
     }
-
-    //for (int y=0; y<board.height; y++) {
-    //  for (int x=0; x<board.width; x++) {  
-    //    boolean hasPlayed = false;
-    //    while (! hasPlayed)
-    //      currentPiece = int(random(players.get(currentPlayer).unplayed.size())) boolean board.isPlayable(piece
-    //        for (currentPiece = 0; currentPiece < players.get(currentPlayer).unplayed.size(); currentPiece++) {
-    //        Piece piece = players.get(currentPlayer).pieces.get(currentPiece);
-    //        if (board.isPlayable(piece, x, y)) {
-    //          board.placePiece(piece, x, y);
-    //        } else {
-    //          println(currentPlayer, currentPiece, x, y, " not played");
-    //        }
-    //      }
-    //  }
-    //}
-
-    ////if (random(3) == 1) piece.rotate(1);
-    //int x=int(random(board.width));
-    //int y = int(random(board.height));
-    //if (board.placePiece(piece, x, y)) {
-    //  println("piece " + piece.owner + "," + piece.number + " played at "+x+","+y);
-    //} else {
-    //  piece.rotate(1);
-    //  if (random(3) == 1) piece.flip();
-    //  println("NOT PLAYED piece " + piece.owner + "," + piece.number + " played at "+x+","+y);
-    //}
 
     playTimer = millis()+PLAY_DELAY;
     currentPlayer++;
